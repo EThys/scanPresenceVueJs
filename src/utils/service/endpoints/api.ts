@@ -4,5 +4,6 @@ export const ApiRoutes = {
   logout: 'logout',
   changePassword: 'changePassword',
   //route for invoice
-  addInvoice: 'addInvoice'
+  addInvoice: 'addInvoice',
+  uploadCsv: 'uploadCsv'
 }
