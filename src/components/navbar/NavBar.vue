@@ -32,7 +32,7 @@ const name = 'Nav'
             <ul>
               <li>
                 <router-link class="text-lg text-white font-semibold" to="/home">
-                  PresenceNayo <span class="bg-gray-500 px-2 rounded-sm">Version 1</span>
+                  Scancheckapp <span class="bg-gray-500 px-2 rounded-sm">Version 1</span>
                 </router-link>
               </li>
             </ul>
