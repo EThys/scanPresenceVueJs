@@ -2,7 +2,18 @@
 import { ref } from 'vue'
 //@ts-ignore
 import NavBar from '@/components/navbar/NavBar.vue'
+//@ts-ignore
+import { useAxiosRequestWithTokenForCsv } from '@/utils/service/axios_api'
+//@ts-ignore
+import { ApiRoutes } from '@/utils/service/endpoints/api'
+import { useRouter } from 'vue-router'
+//@ts-ignore
+import { useToast } from 'vue-toast-notification'
+import 'vue-toast-notification/dist/theme-sugar.css'
 
+const router = useRouter()
+const toast = useToast()
+const loading = ref<Boolean>(false)
 const isCategorySearchOpen = ref(false)
 const isChecked = ref<boolean>(false)
 const selectedItem = ref('All')
@@ -25,6 +36,98 @@ const toggleSwitch = () => {
 }
 const toggleCategorySearchOpen = () => {
   isCategorySearchOpen.value = !isCategorySearchOpen.value
+}
+const fileInput = ref<HTMLInputElement | null>(null)
+const fileName = ref<string | null>(null)
+
+const openFilePicker = () => {
+  fileInput.value?.click()
+}
+
+const handleFileUpload = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  const file = target.files ? target.files[0] : null
+
+  if (file && file.type === 'text/csv') {
+    fileName.value = file.name
+
+    const formData = new FormData()
+    formData.append('file', file)
+
+    // fetch('/upload-csv', {
+    //   method: 'POST',
+    //   body: formData,
+    //   headers: {
+    //     'X-CSRF-TOKEN':
+    //       document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+    //   }
+    // })
+    //   .then((response) => response.json())
+    //   .then((data) => {
+    //     console.log('Success:', data)
+    //   })
+    //   .catch((error) => {
+    //     console.error('Error:', error)
+    //   })
+  } else {
+    alert('Please upload a valid CSV file.')
+  }
+}
+const uploadedFiles = new Set()
+const importCsv = async () => {
+  if (!fileInput.value || !fileInput.value.files?.length) {
+    toast.open({
+      message: 'Please select a CSV file to upload.',
+      type: 'warning',
+      position: 'bottom',
+      duration: 5000
+    })
+    return
+  }
+
+  loading.value = true
+  const formData = new FormData()
+  formData.append('file', fileInput.value.files[0])
+  console.log(fileInput.value.files[0])
+  console.log(formData.append)
+
+  const abortController = new AbortController()
+  const abortSignal = abortController.signal
+
+  const networkTimeout = setTimeout(() => {
+    abortController.abort()
+    loading.value = false
+    toast.open({
+      message: 'Network Error, please check your internet.',
+      type: 'error',
+      position: 'bottom',
+      duration: 5000
+    })
+  }, 30000)
+
+  await useAxiosRequestWithTokenForCsv()
+    .post(`${ApiRoutes.uploadCsv}`, formData, { signal: abortSignal })
+    .then(function (response) {
+      clearTimeout(networkTimeout)
+      toast.open({
+        message: 'CSV imported successfully!',
+        type: 'success',
+        position: 'bottom',
+        duration: 5000
+      })
+      loading.value = false
+    })
+    .catch(function (error) {
+      clearTimeout(networkTimeout)
+      console.log(formData)
+      toast.open({
+        message: error,
+        type: 'error',
+        position: 'bottom',
+        duration: 5000
+      })
+      loading.value = false
+    })
 }
 </script>
 
@@ -71,7 +174,6 @@ const toggleCategorySearchOpen = () => {
             aria-labelledby="user-menu-button"
             tabindex="-1"
           >
-            <!-- Active: "bg-gray-100", Not Active: "" -->
             <a
               v-for="item in items"
               :key="item"
@@ -116,6 +218,67 @@ const toggleCategorySearchOpen = () => {
             <span class="sr-only">Search</span>
           </button>
         </div>
+      </div>
+    </form>
+  </div>
+  <div class="mt-10">
+    <form style="width: 69%" class="mx-auto">
+      <!-- Existing form content -->
+      <div class="flex justify-center mt-6 space-x-4">
+        <input
+          type="file"
+          accept=".csv"
+          ref="fileInput"
+          class="hidden"
+          @change="handleFileUpload"
+        />
+        <button
+          type="button"
+          @click="openFilePicker"
+          class="flex items-center px-4 py-2 text-white bg-green-600 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+        >
+          <svg
+            class="w-5 h-5 mr-2"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 4v16m8-8H4"
+            />
+          </svg>
+          Import CSV
+        </button>
+
+        <button
+          type="button"
+          @click="importCsv"
+          class="flex items-center px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <svg
+            class="w-5 h-5 mr-2"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+          Update Database
+        </button>
+      </div>
+
+      <div v-if="fileName" class="text-center mt-2 text-gray-700 dark:text-white">
+        Uploaded file: {{ fileName }}
       </div>
     </form>
   </div>
