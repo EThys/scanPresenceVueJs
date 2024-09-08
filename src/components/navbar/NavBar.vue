@@ -23,7 +23,7 @@ const name = 'Nav'
 </script>
 
 <template>
-  <nav class="bg-red-500" style="position: sticky; top: 0; z-index: 100">
+  <nav class="bg-cyan-500" style="position: sticky; top: 0; z-index: 100">
     <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
       <div class="relative flex h-16 items-center justify-between">
         <div class="absolute inset-y-0 left-0 flex items-center sm:hidden"></div>
@@ -44,7 +44,7 @@ const name = 'Nav'
           <button
             type="button"
             @click="toggleProfileMenu"
-            class="relative rounded-full bg-red-500 p-1 text-white font-semibold text-md hover:text-white"
+            class="relative rounded-full bg-cyan-500 p-1 text-white font-semibold text-md hover:text-white"
           >
             {{ user?.user.userName }}
             <i class="fas fa-caret-down"></i>
@@ -68,7 +68,7 @@ const name = 'Nav'
                 tabindex="-1"
                 id="user-menu-item-0"
                 ><router-link class="flex items-center justify-between" to="/changePassword"
-                  >Change password <i class="fa-solid fa-key"></i> </router-link
+                  >Changer Mot de passe <i class="fa-solid fa-key"></i> </router-link
               ></a>
               <a
                 @click="logout"
@@ -77,7 +77,7 @@ const name = 'Nav'
                 role="menuitem"
                 tabindex="-1"
                 id="user-menu-item-1"
-                >Logout <i class="fa-solid fa-sign-out-alt"></i
+                >Se deconnecter <i class="fa-solid fa-sign-out-alt"></i
               ></a>
             </div>
           </div>

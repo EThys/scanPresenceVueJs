@@ -36,7 +36,7 @@ const login = async () => {
     abortController.abort()
     loading.value = false
     toast.open({
-      message: 'Network Error, please check your internet.',
+      message: 'Erreur réseau, veuillez vérifier votre connexion Internet.',
       type: 'error',
       position: 'bottom',
       duration: 5000
@@ -117,7 +117,7 @@ const loginValidate = async () => {
               />
             </div>
             <div class="flex items-center w-full">
-              <label for="password" class="text-lg text-black w-1/4">Password</label>
+              <label for="password" class="text-lg text-black w-1/4">Mot de passe</label>
               <input
                 type="password"
                 id="password"
@@ -131,7 +131,7 @@ const loginValidate = async () => {
             <div class="flex items-center w-full">
               <label class="text-lg text-black w-1/4"></label>
               <input type="checkbox" id="remember" name="remember" class="mr-2" />
-              <label for="remember" class="text-black text-sm">Remember Me</label>
+              <label for="remember" class="text-black text-sm">Se souvenir de moi</label>
             </div>
             <div class="flex items-center w-full">
               <label class="text-lg text-black w-1/4"></label>
@@ -141,7 +141,7 @@ const loginValidate = async () => {
                 v-if="!loading"
               >
                 <i class="fa fa-sign-in-alt"></i>
-                Login
+                Se connecter
               </button>
               <p v-else style="color: green">
                 <span class="fas fa-sync fa-spin"></span> Verification

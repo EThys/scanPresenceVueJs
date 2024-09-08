@@ -39,7 +39,7 @@ const changePasswored = async () => {
     abortController.abort()
     loading.value = false
     toast.open({
-      message: 'Network Error, please check your internet.',
+      message: 'Erreur réseau, veuillez vérifier votre connexion Internet.',
       type: 'error',
       position: 'bottom',
       duration: 5000
@@ -110,13 +110,13 @@ const changePasswordValidate = async () => {
   >
     <div class="w-full max-w-2xl mx-auto bg-white rounded-md shadow-md overflow-hidden">
       <div class="hidden md:block w-full bg-gray-400 py-5 px-10">
-        <h1 class="text-white text-left text-2xl">Change Password</h1>
+        <h1 class="text-white text-left text-2xl">Changeer Mot de passe</h1>
       </div>
       <div class="w-full">
         <form class="px-8 py-10" @submit.prevent="changePasswordValidate" method="post">
           <div class="flex flex-col space-y-4">
             <div class="flex items-center w-full">
-              <label for="Password" class="text-lg text-black w-1/4">Passsword</label>
+              <label for="Password" class="text-lg text-black w-1/4">Mot de passe</label>
               <input
                 id="Password"
                 name="Password"
@@ -127,7 +127,7 @@ const changePasswordValidate = async () => {
             </div>
 
             <div class="flex items-center w-full">
-              <label for="newPassword" class="text-lg text-black w-1/4">New Password</label>
+              <label for="newPassword" class="text-lg text-black w-1/4">Nouveau mot de passe</label>
               <input
                 type="password"
                 id="newPassword"
@@ -137,7 +137,9 @@ const changePasswordValidate = async () => {
               />
             </div>
             <div class="flex items-center w-full">
-              <label for="confirmPassword" class="text-lg text-black w-1/4">Confirm Password</label>
+              <label for="confirmPassword" class="text-lg text-black w-1/4"
+                >Confirmer mot de passe</label
+              >
               <input
                 type="password"
                 id="confirmPassword"
@@ -156,7 +158,7 @@ const changePasswordValidate = async () => {
                 v-if="!loading"
               >
                 <i class="fa-solid fa-lock-open"></i>
-                Change password
+                Changer mot de passe
               </button>
               <p v-else style="color: green">
                 <span class="fas fa-sync fa-spin"></span> Verification

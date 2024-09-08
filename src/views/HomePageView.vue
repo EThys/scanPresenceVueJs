@@ -70,14 +70,14 @@ const handleFileUpload = (event: Event) => {
     //     console.error('Error:', error)
     //   })
   } else {
-    alert('Please upload a valid CSV file.')
+    alert('euillez télécharger un fichier CSV valide.')
   }
 }
 const uploadedFiles = new Set()
 const importCsv = async () => {
   if (!fileInput.value || !fileInput.value.files?.length) {
     toast.open({
-      message: 'Please select a CSV file to upload.',
+      message: 'Veuillez sélectionner un fichier CSV à télécharger.',
       type: 'warning',
       position: 'bottom',
       duration: 5000
@@ -98,7 +98,7 @@ const importCsv = async () => {
     abortController.abort()
     loading.value = false
     toast.open({
-      message: 'Network Error, please check your internet.',
+      message: 'Erreur réseau, veuillez vérifier votre connexion Internet.',
       type: 'error',
       position: 'bottom',
       duration: 5000
@@ -110,7 +110,7 @@ const importCsv = async () => {
     .then(function (response) {
       clearTimeout(networkTimeout)
       toast.open({
-        message: 'CSV imported successfully!',
+        message: 'CSV importé avec succès!',
         type: 'success',
         position: 'bottom',
         duration: 5000
@@ -215,7 +215,7 @@ const importCsv = async () => {
                 d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
               />
             </svg>
-            <span class="sr-only">Search</span>
+            <span class="sr-only">Recherche</span>
           </button>
         </div>
       </div>
@@ -251,13 +251,13 @@ const importCsv = async () => {
               d="M12 4v16m8-8H4"
             />
           </svg>
-          Import CSV
+          Importer CSV
         </button>
 
         <button
           type="button"
           @click="importCsv"
-          class="flex items-center px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="flex items-center px-4 py-2 text-white bg-cyan-600 rounded-md hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500"
         >
           <svg
             class="w-5 h-5 mr-2"
@@ -273,12 +273,12 @@ const importCsv = async () => {
               d="M5 13l4 4L19 7"
             />
           </svg>
-          Update Database
+          Mise a jour base de donnée
         </button>
       </div>
 
       <div v-if="fileName" class="text-center mt-2 text-gray-700 dark:text-white">
-        Uploaded file: {{ fileName }}
+        Fichier téléchargé: {{ fileName }}
       </div>
     </form>
   </div>
