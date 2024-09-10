@@ -10,6 +10,12 @@ export interface IUser {
   }
 }
 
+export interface IUserRegister {
+  email: string
+  password: string
+  userName: String
+}
+
 export interface IUserAuth {
   email: string
   password: string

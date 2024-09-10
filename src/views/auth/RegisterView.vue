@@ -1,0 +1,183 @@
+<script lang="ts" setup>
+import { ref } from 'vue'
+//@ts-ignore
+import { useAxiosRequestWithToken } from '@/utils/service/axios_api'
+//@ts-ignore
+import { ApiRoutes } from '@/utils/service/endpoints/api'
+import { useRouter } from 'vue-router'
+//@ts-ignore
+import type { IUser, IUserRegister } from '@/utils/interface/user/IUser'
+//@ts-ignore
+import type { IToken } from '@/utils/interface/token'
+//@ts-ignore
+import { useToast } from 'vue-toast-notification'
+import 'vue-toast-notification/dist/theme-sugar.css'
+//@ts-ignore
+import { setUser } from '@/stores/user'
+//@ts-ignore
+import { setToken } from '@/stores/token'
+//@ts-ignore
+import NavBarLogin from '@/components/navbar/NavBarLogin.vue'
+const router = useRouter()
+const toast = useToast()
+const loading = ref<Boolean>(false)
+const auth = ref<IUserRegister>({
+  email: '',
+  password: '',
+  userName: ''
+})
+
+const register = async () => {
+  loading.value = true
+  const data = JSON.parse(JSON.stringify(auth.value))
+  const abortController = new AbortController()
+  const abortSignal = abortController.signal
+
+  const networkTimeout = setTimeout(() => {
+    abortController.abort()
+    loading.value = false
+    toast.open({
+      message: 'Erreur réseau, veuillez vérifier votre connexion Internet.',
+      type: 'error',
+      position: 'bottom',
+      duration: 5000
+    })
+  }, 30000)
+
+  await useAxiosRequestWithToken()
+    .post(`${ApiRoutes.register}`, data, { signal: abortSignal })
+    .then(function (response) {
+      //success
+      clearTimeout(networkTimeout)
+      toast.open({
+        message: response.data.message,
+        type: 'success',
+        position: 'bottom',
+        duration: 5000
+      })
+      router.push('/')
+      loading.value = false
+    })
+    .catch(function (error) {
+      //error
+      clearTimeout(networkTimeout)
+      toast.open({
+        message: error.response.data.message,
+        type: 'error',
+        position: 'bottom',
+        duration: 5000
+      })
+      loading.value = false
+    })
+}
+
+const registerValidate = async () => {
+  loading.value = true
+  if (
+    !auth.value.password ||
+    !auth.value.email ||
+    !auth.value.userName ||
+    auth.value.password.trim() === '' ||
+    auth.value.email.trim() === '' ||
+    auth.value.userName.trim() === ''
+  ) {
+    setTimeout(() => {
+      toast.open({
+        message: 'Oops...Veuillez remplir vos informations!',
+        type: 'error',
+        position: 'bottom',
+        duration: 5000
+      })
+      loading.value = false
+    }, 300)
+    return
+  } else {
+    await register()
+  }
+}
+</script>
+
+<template>
+  <NavBarLogin />
+  <div
+    style="margin-top: -5%"
+    class="min-w-screen min-h-screen bg-gray-100 flex items-center justify-center px-5"
+  >
+    <div class="w-full max-w-xl mx-auto bg-white rounded-md shadow-md overflow-hidden">
+      <div class="hidden md:block w-full bg-gray-700 py-5 px-10">
+        <h1 class="text-white text-left text-2xl">Inscription</h1>
+      </div>
+      <div class="w-full">
+        <form class="px-8 py-10" @submit.prevent="registerValidate" method="post">
+          <div class="flex flex-col space-y-4">
+            <div class="flex items-center w-full">
+              <label for="userName" class="text-lg text-black w-1/4">Nom d'utilisateur</label>
+              <input
+                id="userName"
+                name="userName"
+                type="text"
+                v-model="auth.userName"
+                class="w-3/4 text-black pr-3 pl-3 py-1 border-2 border-gray-200 outline-none focus:border-gray-500"
+              />
+            </div>
+            <div class="flex items-center w-full">
+              <label for="email" class="text-lg text-black w-1/4">email</label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                v-model="auth.email"
+                class="w-3/4 text-black pr-3 pl-3 py-1 border-2 border-gray-200 outline-none focus:border-gray-500"
+              />
+            </div>
+            <div class="flex items-center w-full">
+              <label for="password" class="text-lg text-black w-1/4">Mot de passe</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                v-model="auth.password"
+                class="w-3/4 text-black pr-3 pl-3 py-1 border-2 border-gray-200 outline-none focus:border-gray-500"
+              />
+            </div>
+          </div>
+          <div class="flex flex-col items-start mt-4">
+            <div class="flex items-center w-full">
+              <label class="text-lg text-black w-1/4"></label>
+              <input type="checkbox" id="remember" name="remember" class="mr-2" />
+              <label for="remember" class="text-black text-sm">Se souvenir de moi</label>
+            </div>
+            <div class="flex items-center w-full">
+              <label class="text-lg text-black w-1/4"></label>
+              <button
+                class="bg-gray-700 hover:bg-black rounded-md text-white text-lg px-6 py-2 mt-4"
+                type="submit"
+                v-if="!loading"
+              >
+                <i class="fa fa-sign-in-alt"></i>
+                S'inscrire
+              </button>
+              <p v-else style="color: green">
+                <span class="fas fa-sync fa-spin"></span> Verification
+              </p>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</template>
+<style>
+.fas.fa-sync {
+  animation: spin 0.6s infinite linear;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+</style>
