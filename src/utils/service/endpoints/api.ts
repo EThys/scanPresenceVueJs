@@ -6,5 +6,8 @@ export const ApiRoutes = {
   changePassword: 'changePassword',
   //route for invoice
   addInvoice: 'addInvoice',
-  uploadCsv: 'uploadCsv'
+  getAllTickets: 'all/tickets',
+  uploadCsv: 'uploadCsv',
+  searchTicket:'tickets/search',
+  updatePresence: (id:any) => `tickets/${id}/presence`
 }
