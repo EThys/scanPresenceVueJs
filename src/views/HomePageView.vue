@@ -94,9 +94,24 @@ const searchTickets = async () => {
 };
 
 const ticketStore = useTicketStore()
+
 onMounted(() => {
-  ticketStore.fetchTickets(token)
-})
+  if (!loading.value && searchResults.value.length > 0) {
+    searchResults.value.forEach(ticket => {
+      const storedPresence = localStorage.getItem(`presence_${ticket.TicketId}`);
+      if (storedPresence !== null) {
+        // Convertir explicitement la chaîne en booléen
+        ticket.presence = storedPresence == 'true' || 1 ;
+      } else {
+        // Si aucune valeur n'est trouvée, définir par défaut à false ou un autre état initial
+        ticket.presence = false || 0;
+      }
+    });
+  }
+
+  ticketStore.fetchTickets(token);
+});
+
 const importCsv = async () => {
   if (!fileInput.value || !fileInput.value.files?.length) {
     toast.open({
@@ -173,6 +188,8 @@ const updatePresence = async (ticketId:any, presence:any) => {
     if (ticketIndex !== -1) {
       ticketStore.TicketList[ticketIndex].presence = presence;
     }
+    localStorage.setItem(`presence_${ticketId}`, presence ? 'true' : 'false');
+
 
   } catch (error) {
     console.error('Error:', error);
@@ -399,11 +416,9 @@ const resetFileInput = () => {
                         
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           <input type="checkbox" v-model="ticket.presence" @change="updatePresence(ticket.TicketId, ticket.presence)" />
-
-                            <!-- <input type="checkbox" 
-                                   :checked="ticket.presence === 1 || ticket.presence === 1" 
-                                   @change="updatePresence(ticket.TicketId, $event.target?.checked)" /> -->
                         </td>
+                        <td v-if="ticket.presence==1 || ticket.presence==true" class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-500">Oui</td>
+                        <td v-else class="px-6 py-4 whitespace-nowrap text-sm font-medium text-red-500">Non</td>
                     </tr>
                 </template>
                 <template v-if="!loading && searchResults.length === 0">
