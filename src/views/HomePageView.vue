@@ -385,6 +385,7 @@ const resetFileInput = () => {
                 <tr>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prénom</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Table</th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Civilité</th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Présence</th>
                 </tr>
@@ -408,6 +409,7 @@ const resetFileInput = () => {
                     <tr v-for="ticket in searchResults" :key="ticket.TicketId" class="hover:bg-gray-100 transition duration-150 ease-in-out">
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ ticket.nom }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ ticket.prenom }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ ticket.table }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ ticket.civilite }}</td>
                         
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
