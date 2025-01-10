@@ -5,5 +5,5 @@ export interface ITicket{
     prenom:string
     nombre_des_personnes:number
     civilite:string
-    presence:number
+    presence:unknown
 }
